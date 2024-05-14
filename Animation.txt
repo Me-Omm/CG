@@ -1,0 +1,36 @@
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
+
+using namespace std;
+
+void gotoxy(int x, int y) {
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+void clrscr() {
+    system("cls");
+}
+
+int main() {
+    clrscr();
+    int x = 10, y = 10, direction = 4;
+
+    while (!kbhit()) {
+        clrscr(); // Clear the screen
+        gotoxy(x, y);
+        cout << "O";
+        Sleep(50);
+        y += direction;
+        x++;
+        if (y <= 5 || y >= 20) {
+            direction *= -1;
+        }
+    }
+
+    getch();
+    return 0;
+}

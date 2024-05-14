@@ -1,0 +1,85 @@
+#include<iostream>
+#include<GL/glut.h>
+#include<cmath>
+using namespace std;
+
+int dx,dy,x,y,x1,y1_new,x2,y2;
+float m;
+
+void getPixel(int x,int y){
+    glBegin(GL_POINTS);
+        glVertex2i(x,y);
+    glEnd();
+}
+
+void drawContinuousLine(int x1,int y1,int x2,int y2){
+    dx=x2-x1;
+    dy=y2-y1;
+    m=dy/(float)dx;
+    if(fabs(m)<1){
+        x=x1;
+        y=y1;
+        float p = 2*dy - dx;
+        while(x<x2){
+            if(p<0){
+                x+=1;
+                p+= 2*dy;
+            }else{
+                x+=1;
+                y+=1;
+                p+=2*dy-2*dx;
+            }
+            getPixel(x,y);
+        }
+    }else{
+        x=x1;
+        y=y1;
+        float p = 2*dx - dy;
+        while(y<y2){
+            if(p<0){
+                y+=1;
+                p+= 2*dx;
+            }else{
+                x+=1;
+                y+=1;
+                p+=2*dx-2*dy;
+            }
+            getPixel(x,y);
+        }
+    }
+}
+void display(void){
+    glPointSize(2.0);
+    drawContinuousLine(x1,y1_new,x2,y2);
+    glFlush();
+}
+
+int main(int argc, char *argv[])
+{
+    cout<<"Enter the value of x1,y1,x2,y2"<<endl;
+    cout<<"x1: ";
+    cin>>x1;
+    cout<<"y1: ";
+    cin>>y1_new;
+    cout<<"x2: ";
+    cin>>x2;
+    cout<<"y2: ";
+    cin>>y2;
+
+    glutInit(&argc, argv);
+    glutInitWindowSize(640,480);
+    glutInitWindowPosition(10,10);
+    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
+
+    glutCreateWindow("B_Line");
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1,0,0);
+    gluOrtho2D(-100,100,-100,100);
+    glutDisplayFunc(display);
+
+    glClearColor(1,1,1,1);
+
+    glutMainLoop();
+
+    return 0;
+}
