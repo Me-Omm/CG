@@ -1,0 +1,73 @@
+#include <iostream>
+#include <GL/glut.h>
+#include <cmath>
+using namespace std;
+
+int x, y, x1, x2, y1_new, y2, dx, dy;
+float m;
+
+// Function to draw a single pixel
+void drawPixel(int x, int y) {
+    glBegin(GL_POINTS);
+    glVertex2i(x, y);
+    glEnd();
+}
+void drawDottedLineDDA(int x1, int y1, int x2, int y2) {
+    dx = x2 - x1;
+    dy = y2 - y1;
+    m = dy / (float)dx;
+
+
+    if (fabs(m) < 1) {
+        float x_incr = 1;
+        float y_incr = m;
+        float y = y1;
+        for (int x = x1; x <= x2; ++x) {
+            drawPixel(round(x), round(y));
+            y += y_incr;
+        }
+    } else {
+        float x_incr = 1 / m;
+        float x = x1;
+        float y_incr = m;
+        for (int y = y1; y <= y2; ++y) {
+            drawPixel(round(x), round(y));
+            x += x_incr;
+        }
+    }
+}
+
+
+void init(void) {
+    glClearColor(1,1,1,0);
+    gluOrtho2D(0,500,0,500);
+}
+void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0, 0.1, 0.0);
+    glPointSize(2.0f);
+ drawDottedLineDDA(x1, y1_new, x2, y2);
+    glFlush();
+}
+
+int main(int argc, char *argv[]) {
+    cout << "\n : Enter X1,Y1,X2,Y2 :\n";
+    cout << "x1: ";
+    cin >> x1;
+    cout << "Y1: ";
+    cin >> y1_new;
+    cout << "X2: ";
+    cin >> x2;
+    cout << "Y2: ";
+    cin >> y2;
+
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
+    glutInitWindowSize(500, 500);
+    glutInitWindowPosition(100, 100);
+    glutCreateWindow("DDA Line Algorithm");
+    init();
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}
